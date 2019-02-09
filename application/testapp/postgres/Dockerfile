@@ -1,4 +1,4 @@
-FROM postgres:11.1
+FROM debezium/postgres
 ENV POSTGRES_PASSWORD=admin
 ENV POSTGRES_USER=admin
 ENV POSTGRES_DB=test

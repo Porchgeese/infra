@@ -25,6 +25,13 @@ spec:
       - name: dconnector
         image: dconnector:local
         imagePullPolicy: IfNotPresent
+        env:
+          - name: GROUP_ID
+            value: "an-id"
+          - name: CONFIG_STORAGE_TOPIC
+            value: "testapp"
+          - name: OFFSET_STORAGE_TOPIC
+            value: "test-app-offset"
 ---
 kind: Service
 apiVersion: v1
@@ -34,11 +41,10 @@ metadata:
 spec:
   type: NodePort
   selector:
-    application: zookeeper
+    application: dconnector
     service: testapp
-    name: zookeeper
+    name: dconnector
   ports:
   - name: http
-    port: 2181
+    port: 8083
 ---
-
