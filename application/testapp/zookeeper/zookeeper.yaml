@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: testapp
+  name: zookeeper
+  labels:
+    service: testapp
+    application: zookeeper
+    name: zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: testapp
+      application: zookeeper
+      name: zookeeper
+  template:
+    metadata:
+      labels:
+        service: testapp
+        application: zookeeper
+        name: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: zookeeper:local
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 2181
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: zookeeper
+  namespace: testapp
+spec:
+  type: NodePort
+  selector:
+    application: zookeeper
+    service: testapp
+    name: zookeeper
+  ports:
+  - name: http
+    port: 2181
+---
+

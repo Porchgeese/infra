@@ -1,0 +1,3 @@
+FROM zookeeper:3.5
+EXPOSE 2181
+EXPOSE 8080

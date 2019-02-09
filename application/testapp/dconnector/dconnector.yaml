@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: testapp
+  name: dconnector
+  labels:
+    service: testapp
+    application: dconnector
+    name: dconnector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: testapp
+      application: dconnector
+      name: dconnector
+  template:
+    metadata:
+      labels:
+        service: testapp
+        application: dconnector
+        name: dconnector
+    spec:
+      containers:
+      - name: dconnector
+        image: dconnector:local
+        imagePullPolicy: IfNotPresent
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dconnector
+  namespace: testapp
+spec:
+  type: NodePort
+  selector:
+    application: zookeeper
+    service: testapp
+    name: zookeeper
+  ports:
+  - name: http
+    port: 2181
+---
+

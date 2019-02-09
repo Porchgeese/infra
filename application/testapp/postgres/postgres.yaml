@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: testapp
+  name: database
+type: Opaque
+data:
+  username: YWRtaW4=
+  password: YWRtaW4=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: testapp
+  name: testapp.db
+  labels:
+    service: testapp
+    application: postgres
+    name: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: testapp
+      application: postgres
+      name: database
+  template:
+    metadata:
+      labels:
+        service: testapp
+        application: postgres
+        name: database
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:local
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: database
+  namespace: testapp
+spec:
+  type: NodePort
+  selector:
+    service: testapp
+    application: postgres
+    name: database
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5432
+    targetPort: 5432
+---
+
+

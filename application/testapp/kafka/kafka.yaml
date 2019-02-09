@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: testapp
+  name: kafka
+  labels:
+    service: testapp
+    application: kafka
+    name: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: testapp
+      application: kafka
+      name: kafka
+  template:
+    metadata:
+      labels:
+        service: testapp
+        application: kafka
+        name: kafka
+    spec:
+      containers:
+      - name: kafka
+        image: kafka:local
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9092
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka
+  namespace: testapp
+spec:
+  type: NodePort
+  selector:
+    application: testapp
+    program: storage
+    name: kafka
+  ports:
+  - name: http
+    protocol: TCP
+    port: 9092
+    targetPort: 9092
+---
+
